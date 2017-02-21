@@ -22,7 +22,10 @@ module StripeMock
         # Ensure customer has card to charge if plan has no trial and is not free
         verify_card_present(customer, plan)
 
-        subscription = add_subscription_to_customer(plan, customer, params[:current_period_start])
+        subscription =
+          add_subscription_to_customer(plan, customer,
+                                       params[:current_period_start],
+                                       params[:trial_end])
 
         # oddly, subscription returned from 'create_subscription' does not expand plan
         subscription.merge(plan: params[:plan])

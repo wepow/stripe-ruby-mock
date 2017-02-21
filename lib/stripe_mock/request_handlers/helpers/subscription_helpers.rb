@@ -6,11 +6,11 @@ module StripeMock
         customer[:subscriptions][:data].find{|sub| sub[:id] == sub_id }
       end
 
-      def add_subscription_to_customer(plan, cus, start_time = nil)
+      def add_subscription_to_customer(plan, cus, start_time = nil, trial_end = nil)
         start_time ||= Time.now.utc.to_i
         params = { id: new_id('su'), plan: plan, customer: cus[:id], current_period_start: start_time, current_period_end: get_ending_time(start_time, plan) }
 
-        if plan[:trial_period_days].nil?
+        if plan[:trial_period_days].nil? || trial_end == "now"
           params.merge!({status: 'active', trial_start: nil, trial_end: nil})
         else
           params.merge!({status: 'trialing', trial_start: Time.now.utc.to_i, trial_end: (Time.now.utc.to_i + plan[:trial_period_days]*86400) })
